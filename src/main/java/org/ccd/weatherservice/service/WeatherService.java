@@ -24,7 +24,7 @@ public class WeatherService {
     static String BASEURL = APIURL
             + "serviceKey=" + APIKEY
             + "&pageNo=1&numOfRows=400"
-            + "&dataType=JSON&dataCd=ASOS&dateCd=DAY"
+            + "&dataType=json&dataCd=ASOS&dateCd=DAY"
             + "&stnIds=108";
 
     public void initialize() {

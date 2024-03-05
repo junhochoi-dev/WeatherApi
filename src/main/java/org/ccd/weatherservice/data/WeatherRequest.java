@@ -9,6 +9,7 @@ import org.ccd.weatherservice.domain.Weather;
 
 import java.util.List;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class WeatherRequest {

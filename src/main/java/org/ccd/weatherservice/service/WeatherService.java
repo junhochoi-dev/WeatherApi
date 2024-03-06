@@ -5,13 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.ccd.weatherservice.data.WeatherRequest;
 import org.ccd.weatherservice.domain.Weather;
 import org.ccd.weatherservice.repository.WeatherRepository;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
-import javax.print.attribute.standard.Media;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;

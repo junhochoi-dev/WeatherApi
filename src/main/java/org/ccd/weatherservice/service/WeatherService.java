@@ -1,38 +1,43 @@
 package org.ccd.weatherservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ccd.weatherservice.data.WeatherRequest;
 import org.ccd.weatherservice.domain.Weather;
 import org.ccd.weatherservice.repository.WeatherRepository;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import javax.print.attribute.standard.Media;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class WeatherService {
     private final WebClient webClient;
     private final WeatherRepository weatherRepository;
 
-    static String APIURL = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?";
+    static String APIURL = "/1360000/AsosDalyInfoService/getWthrDataList?";
     static String APIKEY = "VrTrxmDgK7SwSmqta6hSDBRkMCehSfTOUoRp71BD7dpNzJxI72W12CXmMh3Pi1%2B8NtFbKQE1aihAezArmiC2bA%3D%3D";
 
     static String BASEURL = APIURL
             + "serviceKey=" + APIKEY
-            + "&pageNo=1&numOfRows=400"
-            + "&dataType=json&dataCd=ASOS&dateCd=DAY"
-            + "&stnIds=108";
-
+            + "&pageNo=1&numOfRows=400&dataType=JSON&dataCd=ASOS&dateCd=DAY";
     public void initialize() {
-        List<WeatherRequest> weatherRequestList = Flux.range(2019, 2023)
+        log.info("########## INIT START");
+
+        List<WeatherRequest> weatherRequestList = Flux.range(2019, 5)
                 .flatMap(year -> webClient.get()
-                        .uri(BASEURL + "&startDt=" + year + "0101" + "&endDt=" + year + "1231")
+                        .uri(uriBuilder -> uriBuilder.path(BASEURL + "&startDt=" + year + "0101" + "&endDt=" + year + "1231" + "&stnIds=108").build())
                         .retrieve()
                         .bodyToMono(WeatherRequest.class)
+                        .timeout(Duration.ofSeconds(100))
                 )
                 .collectList()
                 .block();
@@ -42,8 +47,9 @@ public class WeatherService {
                 weatherList.addAll(weatherRequest
                         .getResponse()
                         .getBody()
-                        .getWeatherList())
+                        .getWeatherList().getWeathers())
         );
         weatherRepository.saveAll(weatherList);
+        log.info("########## INIT END");
     }
 }

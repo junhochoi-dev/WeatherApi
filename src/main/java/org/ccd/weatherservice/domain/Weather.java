@@ -1,12 +1,14 @@
 package org.ccd.weatherservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Weather {
     @Id
@@ -16,6 +18,7 @@ public class Weather {
     @JsonProperty("tm")
     private String date;
 
+    @Column(length = 1000)
     @JsonProperty("iscs")
     private String weatherDetail;
 
